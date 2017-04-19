@@ -64,13 +64,37 @@ classはリンクのSVG pathに適用されるクラス名。
 
 |class     |線種      |
 |:--------:|:---------|
-|デフォルト|ベジェ曲線|
-|S         |直線      |
-|SH        |水平直線（接続先ブロックのY位置とは無関係に水平）|
-|SV        |垂直直線（接続先ブロックのX位置とは無関係に垂直）|
-|C         |2頂点の角線|
-|Cn        |2頂点の角線。nは最初の角までのピクセル数|
-|CH        |1頂点の角線。最初の線が水平|
+|デフォルト|ベジェ曲線（fig-01）|
+|S         |直線（fig-02）|
+|SH        |水平直線（接続先ブロックのY位置とは無関係に水平）（fig-03）|
+|SV        |垂直直線（接続先ブロックのX位置とは無関係に垂直）（fig-04）|
+|C         |2頂点の角線（fig-05）|
+|Cn        |2頂点の角線。nは最初の角までのピクセル数（fig-06, fig-07）|
+|CH        |1頂点の角線。最初の線が水平（fig-07）|
+
+**[fig-01]**  
+![fig-01](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-01.gif)
+
+**[fig-02]**  
+![fig-02](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-02.gif)
+
+**[fig-03]**  
+![fig-03](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-03.gif)
+
+**[fig-04]**  
+![fig-04](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-04.gif)
+
+**[fig-05]**  
+![fig-05](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-05.gif)
+
+**[fig-06]**  
+![fig-06](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-06.gif)
+
+**[fig-07]**  
+![fig-07](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-07.gif)
+
+**[fig-08]**  
+![fig-08](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-08.gif)
 
 ###ブロックのタイトル
 table要素で有効
