@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="css/markdown.css">
+</head>
+<body>
+<h1>MarkDownDiagram</h1>
+<p>Markdown風のテキストで、ER図やブロックダイアグラムのようなチャートを描けるツールです。</p>
+<p>ローカルでブラウザのみで動作します。index.htmlをブラウザで開いてください。</p>
+<p>Chrome推奨ですが、Safari,Firefoxでも動作します。タッチIFは未対応。</p>
+<h2>機能</h2>
+<ul>
+<li>テキストでブロックを記述し、ブロック間を線で繋ぐ描画</li>
+<li>ブロックをマウスでドラッグして位置を調整</li>
+<li>ドラッグした位置はテキストに反映される</li>
+<li>ブロックは複数行のtableとdivの2種類の要素</li>
+<li>ラインはSVGのpathで描画</li>
+<li>ブロックやラインは、cssで装飾できる</li>
+<li>テキストのファイルへのロードセーブ機能</li>
+<li>印刷機能 (現状A4横サイズ固定)</li>
+<li>ダブルクリックすると要素が選択され、矢印キーで移動。DELで削除。<br>
+（chromeでのみ動作確認）</li>
+<li>エディタ部分の幅とズームをローカルに保存</li>
+</ul>
+<h3>ロード/セーブについて</h3>
+<p>編集領域のテキストは、ブラウザのlocalStorageに自動保存されます。<br>
+LOAD/SAVEは、テキストをそのままファイルから読み込み、ダウンロードします。拡張子は便宜上.mdgとなっていますが、プレーンテキストです。</p>
+<h2>書式</h2>
+<h3>ブロックの定義</h3>
+<pre><code>[name] (class) &lt;position&gt;
+</code></pre>
+
+<p>nameはブロックのIDとして/[a-z0-9-_]+/。classはcssのためのクラス名。positionは自動的に設定される。</p>
+<h3>ブロックの区切り線</h3>
+<pre><code>---
+</code></pre>
+
+<p>複数行に区切られているとtable要素になる。</p>
+<h3>他ブロックへのリンク</h3>
+<pre><code>==&gt;[name]
+</code></pre>
+
+<p>これ自体区切り線としても働く。ブロックの途中にある場合は、その行から線が始まる。</p>
+<p>リンクの属性を設定</p>
+<pre><code>u&lt;=(class)=&gt;d[name]
+</code></pre>
+
+<p>classはリンクのSVG pathに適用されるクラス名。<br>
+"&lt;","&gt;"は線の矢印を表す。両端に無くてもよい。<br>
+"u","d"の部分は、線の接続位置を表す。左が自ブロック、右が相手ブロックの指定。<br>
+"u"はブロックの上部中央、"d"は下部中央。"l"はブロックの左で、"r"は右になる。<br>
+相手のブロックの"l","r"の場合は、"l2","r1"のように接続先の行を指定することができる。</p>
+<p>線種は以下の通りに指定する。</p>
+<table>
+<thead>
+<tr>
+<th align="center">class</th>
+<th align="left">線種</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">デフォルト</td>
+<td align="left">ベジェ曲線</td>
+</tr>
+<tr>
+<td align="center">S</td>
+<td align="left">直線</td>
+</tr>
+<tr>
+<td align="center">SH</td>
+<td align="left">水平直線（接続先ブロックのY位置とは無関係に水平）</td>
+</tr>
+<tr>
+<td align="center">SV</td>
+<td align="left">垂直直線（接続先ブロックのX位置とは無関係に垂直）</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="left">2頂点の角線</td>
+</tr>
+<tr>
+<td align="center">Cn</td>
+<td align="left">2頂点の角線。nは最初の角までのピクセル数</td>
+</tr>
+<tr>
+<td align="center">CH</td>
+<td align="left">1頂点の角線。最初の線が水平</td>
+</tr>
+</tbody>
+</table>
+<h3>ブロックのタイトル</h3>
+<p>table要素で有効</p>
+<pre><code>#title
+</code></pre>
+
+<h3>画像ブロック</h3>
+<pre><code>[name] (image)
+![title](file &quot;caption&quot;)
+</code></pre>
+
+<p>プリセットのクラスとして"image"をブロックのクラスに適用すると、枠なし、背景透明に設定できる。</p>
+<h3>コメント</h3>
+<pre><code>// comment
+</code></pre>
+
+<h2>カスタマイズ</h2>
+<p>css/custom.css にカスタムのスタイルを追加して使用できます。</p>
+<p>画像はどこにあっても大丈夫ですが、imgの下に入れるとよいでしょう。</p>
+<h1>Copyright</h1>
+<p>Copyright 2016 Wakufactory<br>
+http://wakufactory.jp/ twitter:@wakufactory</p>
+<p>License: MIT </p>
+</body>
+</html>

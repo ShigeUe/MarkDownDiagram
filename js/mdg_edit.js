@@ -1,4 +1,5 @@
 $(function() {
+	var selected = null;
 	
 	new resizebar('#rb','#edit',"v",1) ;
 		
@@ -8,6 +9,9 @@ $(function() {
 	$('#zoom').on("input",function() {
 		mag = $(this).val()/100 ;
 		$('#szoom').html("#base {transform: scale("+mag+")}");
+		$('#zoomText').val(mag);
+
+		savelocal();
 	})
 	$('#size_x,#size_y').on('change',function(ev){
 		$('#base').css(($(this).attr('id')=="size_x")?'width':'height',parseInt($(this).val())+"px") ;
@@ -19,6 +23,9 @@ $(function() {
 	if(p) {
 		$('#source').val( p.source ) ;
 		$('#i_fname').val(p.fname ) ;
+		$('#edit').css('width', p.width);
+		$('#zoom').val(p.zoom * 100);
+		$('#zoom').trigger('input');
 	}
 	var data = b.parse($('#source').val())  ;
 	b.setobj(data,true) ;
@@ -33,23 +40,31 @@ $(function() {
 		return ret ;
 	}
 	
-	function savelocal(s) {
-		window.localStorage.setItem("mdg",JSON.stringify({sources:[s]})) ;
+	function savelocal() {
+		var s = $('#source').val();
+		var f = $('#i_fname').val();
+		var w = $('#edit').css('width');
+		var o = {source:s, fname:f, zoom:mag, width:w};
+		window.localStorage.setItem("mdg",JSON.stringify({sources:[o]})) ;
 	}
 
 	$('#source').on('keyup',function() {
+		$('#base').trigger('click');
 		var s = $(this).val() ;
 		data = b.parse(s) ;
 //		console.log(data) ;
 		b.setobj(data) ;
-		savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-	})
+		savelocal() ;
+		bindBoxClick();
+	});
+
 	$(document).on("dragstart",'#base .box',function(ev){
 		var oe = ev.originalEvent ;
 //		console.log("dstart") ;
 //		console.log(oe.pageX+"/"+oe.pageY);
 		ev.originalEvent.dataTransfer.setData("text",$(this).attr('id')+"/"+oe.pageX+"/"+oe.pageY);
-	})
+	});
+
 	$('#base').on("dragenter dragover",function(){
 		return false ;
 	}).on("drop",function(ev){
@@ -57,7 +72,7 @@ $(function() {
 		var oe = ev.originalEvent ;
 		var k = ev.originalEvent.dataTransfer.getData("text").split("/") ;
 		var id = k[0] ;
-		
+
 		var ox = (oe.pageX-k[1])/mag ;
 		var oy = (oe.pageY-k[2])/mag ;
 //		console.log(ox+"/"+oy) ;
@@ -72,13 +87,14 @@ $(function() {
 		b.redraw(data) ;
 		var s = b.upd_text($('#source').val()) ;
 		$('#source').val(s) ;
-		savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+		savelocal() ;
 		return false ;
-	})
-	
+	});
+
 	$('#b_load').on("click",function() {
 		$('#f_load').click() ;
-	})
+	});
+
 	$('#f_load').on("change",function(ev) {
 		var f = ev.originalEvent.target.files ;
 		var reader = new FileReader();
@@ -88,39 +104,120 @@ $(function() {
 			$('#source').val(src) ;
 			data = b.parse(src) ;
 			b.setobj(data,true) ;   
+			bindBoxClick();
 		});
 		$('#i_fname').val(f[0].name) ;
 		reader.readAsText(f[0]);
-	})
+	});
+
 	$('#l_save').on("click",function(){
 		$(this).attr("download",$('#i_fname').val());
 		$(this).attr("href","data:application/octet-stream;charset=UTF-8,"+encodeURIComponent($('#source').val())) ;
 		return true ;
-	})
-
-})
-
-
-function resizebar(bar,target,hv,dir) {
-	this.sw = 0 ;
-	this.sel = target ;
-	this.dir = dir ;
-	this.hv = hv ;
-	this.start = null ;
-	this.attr = (hv=="v")?"width":"height" ;
-	this.mouse = (hv=="v")?"pageX":"pageY" ;
-	var self = this ;
-	$(bar).on('mousedown touchstart',function(ev) {
-		self.sw = parseInt($(self.sel).css(self.attr))-self.dir*ev.originalEvent[self.mouse] ;
-		self.start = self.sel ;
 	});
-	$('body').on('mousemove touchmove',function(ev){
-		if(self.start != self.sel) return true ;
-		var w = self.dir*ev.originalEvent[self.mouse]+self.sw;
-		if(w<100) return false ;
-		$(self.sel).css(self.attr,w+"px") ;
-		return false ;
-	}).on('mouseup touchend',function() {
-		self.start = null ;
-	})
-}
+
+	function moveObject(px,py) {
+		if (selected) {
+			b.setpos(selected.attr('id'),px,py);
+			b.redraw(data);
+			var s = b.upd_text($('#source').val());
+			$('#source').val(s);
+			savelocal();
+			$('.selectBox').css({
+				left: selected.position().left / mag,
+				top : selected.position().top  / mag
+			});
+		}
+	}
+
+	function bindBoxClick() {
+		$('.box').on("dblclick", function(e) {
+			selected = $(this);
+			e.stopPropagation();
+			var x = $(this).position().left / mag;
+			var y = $(this).position().top / mag;
+			var w = $(this).width();
+			var h = $(this).height();
+			var t = $('<div>')
+				.addClass('selectBox')
+				.css({top:y,left:x,width:w,height:h});
+			$('#base').append(t);
+
+
+			var id = $(this).attr("id");
+			var m = $('#source').get(0);
+			var st = m.value.search(new RegExp('\\n\\['+id+'\\]')) + 1;
+			var ss = st + id.length + 2;
+			var ed = m.value.substr(ss).search(new RegExp('\\n\\[')) + 1;
+			if (ed <= 0) {
+				ed = m.textLength;
+			}
+			else {
+				ed += ss;
+			}
+
+			m.setSelectionRange(st,ed);
+		});
+	}
+	bindBoxClick();
+
+	$('#base,#edit').on("click", function() {
+		selected = null;
+		$('.selectBox').remove();
+	});
+
+	$('body').on("keydown", function(e) {
+		if (selected) {
+			if (e.keyCode != 46 && e.keyCode < 37 && e.keyCode > 40) {
+				return;
+			}
+			e.stopPropagation();
+			e.preventDefault();
+
+			if (e.keyCode === 46) {
+				$('#source').get(0).setRangeText('');
+				$('#source').trigger('keyup');
+				return;
+			}
+
+			var ox = 0;
+			var oy = 0;
+			if (e.keyCode === 38) oy = -0.5;
+			if (e.keyCode === 40) oy =  0.5;
+			if (e.keyCode === 37) ox = -0.5;
+			if (e.keyCode === 39) ox =  0.5;
+
+			var em = parseInt($('html').css('font-size')) ;
+			var ex = parseInt(selected.css("left")) ;
+			var ey = parseInt(selected.css("top")) ;
+			var px = Math.floor((ex/em+0.25)*2)/2 + ox;
+			var py = Math.floor((ey/em+0.25)*2)/2 + oy;
+			moveObject(px, py);
+		}
+	});
+
+	function resizebar(bar,target,hv,dir) {
+		this.sw = 0 ;
+		this.sel = target ;
+		this.dir = dir ;
+		this.hv = hv ;
+		this.start = null ;
+		this.attr = (hv=="v")?"width":"height" ;
+		this.mouse = (hv=="v")?"pageX":"pageY" ;
+		var self = this ;
+		$(bar).on('mousedown touchstart',function(ev) {
+			self.sw = parseInt($(self.sel).css(self.attr))-self.dir*ev.originalEvent[self.mouse] ;
+			self.start = self.sel ;
+		});
+		$('body').on('mousemove touchmove',function(ev){
+			if(self.start != self.sel) return true ;
+			var w = self.dir*ev.originalEvent[self.mouse]+self.sw;
+			if(w<100) return false ;
+			$(self.sel).css(self.attr,w+"px") ;
+			return false ;
+		}).on('mouseup touchend',function() {
+			savelocal();
+			self.start = null ;
+		});
+	}
+});

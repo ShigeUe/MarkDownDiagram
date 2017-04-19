@@ -16,7 +16,8 @@ html,body{
 	padding:0 ;
 	box-sizing:border-box;
 	overflow:hidden ;
-	font-family:sans-serif ;
+	font-family:"Meiryo";
+	font-size:14px;
 }
 #main {
 	display:flex ;
@@ -55,7 +56,7 @@ html,body{
 }
 #base {
 	display:block ;
-	font-family:sans-serif;
+	font-family:"Meiryo";
 	background-color:#eef ;
 	transform-origin:0 0 ;
 	color:black ;
@@ -72,7 +73,7 @@ html,body{
 	top:5px ;
 	bottom:5px ;
 	font-size:1rem ;
-	font-family:monospace,sans-serif ;
+	font-family:"Myrica M",monospace,sans-serif ;
 }
 #exp_src {
 	display:none ;
@@ -200,8 +201,9 @@ block6
 <div class=resbar_h id="rb"></div>
 <section id=view>
 <section id=control>
-zoom:<input type=range id=zoom min=25 max=200 value=100>
+zoom:<input type=range id=zoom min=25 max=200 value=100><input type=text id=zoomText size=4 readonly value="1">
 width:<input type=text id=size_x size=6 value=2900> height:<input type=text id=size_y size=6 value=2000>
+&nbsp;<a href="readme.html" target="_blank" style="color:white;">Help page</a>
 </section>
 <div id=vbase>
 <div id=rollbase>

@@ -136,14 +136,34 @@ function connect(o1,o2,param) {
 		var c = param.cls.split(" ") ;
 		var cc = [] ;
 		for(var i in c) {
-			if(c[i].match(/^S|B$/)) {
+			if(c[i].match(/^SV|SH|S|B|C[0-9VH]*$/)) {
 				param.type = c[i] ;
 			} else cc.push(c[i]) ;
 		}
 		if(cc.length>0) cls = 'class="'+cc.join(" ")+'"' ;
 	}
+	// Straight line
 	if(param.type=="S") {
 		ret.push(`<path d="M ${sp.x} ${sp.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+	// Vertical straight line
+	} else if(param.type=="SV") {
+		ep.x = sp.x
+		ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x} ${ep.y}" ${cls} />`) ;
+	// Horizontal straight line
+	} else if(param.type=="SH") {
+		ep.y = sp.y
+		ret.push(`<path d="M ${sp.x} ${sp.y} L ${ep.x} ${sp.y}" ${cls} />`) ;
+	// Angular line
+	} else if(param.type && param.type[0]=="C") {
+		// Like "L". First line is horizontal.
+		if (param.type[1] == 'H') {
+			ret.push(`<path d="M ${sp.x} ${sp.y} L ${ep.x} ${sp.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+		}
+		else {
+			var pm = (param.type.length > 1) ? param.type.substr(1) : 50;
+			ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x+sp.vx*pm} ${sp.y} L ${sp.x+sp.vx*pm} ${ep.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+		}
+	// Bezier curve line
 	} else {
 		var pm = 50 ;
 		ret.push(`<path d="M ${sp.x} ${sp.y} C ${sp.x+sp.vx*pm} ${sp.y+sp.vy*pm} ${ep.x+ep.vx*pm} ${ep.y+ep.vy*pm} ${ep.x} ${ep.y}" ${cls} />`) ;
