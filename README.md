@@ -1,4 +1,4 @@
-#MarkDownDiagram
+# MarkDownDiagram
 
 Markdown風のテキストで、ER図やブロックダイアグラムのようなチャートを描けるツールです。
 
@@ -6,7 +6,7 @@ Markdown風のテキストで、ER図やブロックダイアグラムのよう�
 
 Chrome推奨ですが、Safari,Firefoxでも動作します。タッチIFは未対応。
 
-##機能
+## 機能
 
  - テキストでブロックを記述し、ブロック間を線で繋ぐ描画
  - ブロックをマウスでドラッグして位置を調整
@@ -20,14 +20,14 @@ Chrome推奨ですが、Safari,Firefoxでも動作します。タッチIFは未�
 （chromeでのみ動作確認）
  - エディタ部分の幅とズームをローカルに保存
  
-###ロード/セーブについて
+### ロード/セーブについて
 
 編集領域のテキストは、ブラウザのlocalStorageに自動保存されます。  
 LOAD/SAVEは、テキストをそのままファイルから読み込み、ダウンロードします。拡張子は便宜上.mdgとなっていますが、プレーンテキストです。
 
-##書式
+## 書式
 
-###ブロックの定義
+### ブロックの定義
 
 ```
 [name] (class) <position>
@@ -35,14 +35,14 @@ LOAD/SAVEは、テキストをそのままファイルから読み込み、ダ�
 nameはブロックのIDとして/[a-z0-9-_]+/。classはcssのためのクラス名。positionは自動的に設定される。
 
 
-###ブロックの区切り線
+### ブロックの区切り線
 
 ```
 ---
 ```
 複数行に区切られているとtable要素になる。
 
-###他ブロックへのリンク
+### 他ブロックへのリンク
 
 ```
 ==>[name]
@@ -96,14 +96,14 @@ classはリンクのSVG pathに適用されるクラス名。
 **[fig-08]**  
 ![fig-08](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-08.gif)
 
-###ブロックのタイトル
+### ブロックのタイトル
 table要素で有効
 
 ```
 #title
 ```
 
-###画像ブロック
+### 画像ブロック
 
 ```
 [name] (image)
@@ -111,20 +111,20 @@ table要素で有効
 ```
 プリセットのクラスとして"image"をブロックのクラスに適用すると、枠なし、背景透明に設定できる。
 
-###コメント
+### コメント
 
 ```
 // comment
 ```
 
 
-##カスタマイズ
+## カスタマイズ
 
 css/custom.css にカスタムのスタイルを追加して使用できます。
 
 画像はどこにあっても大丈夫ですが、imgの下に入れるとよいでしょう。
 
-#Copyright
+# Copyright
 
 Copyright 2016 Wakufactory  
 http://wakufactory.jp/ twitter:@wakufactory
