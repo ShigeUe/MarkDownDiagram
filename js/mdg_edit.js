@@ -63,6 +63,7 @@ $(function() {
 //		console.log("dstart") ;
 //		console.log(oe.pageX+"/"+oe.pageY);
 		ev.originalEvent.dataTransfer.setData("text",$(this).attr('id')+"/"+oe.pageX+"/"+oe.pageY);
+		$('#base').trigger('click');
 	});
 
 	$('#base').on("dragenter dragover",function(){
@@ -116,52 +117,47 @@ $(function() {
 		return true ;
 	});
 
-	function moveObject(px,py) {
-		if (selected) {
-			b.setpos(selected.attr('id'),px,py);
-			b.redraw(data);
-			var s = b.upd_text($('#source').val());
-			$('#source').val(s);
-			savelocal();
-			$('.selectBox').css({
-				left: selected.position().left / mag,
-				top : selected.position().top  / mag
-			});
-		}
-	}
-
 	function bindBoxClick() {
-		$('.box').on("dblclick", function(e) {
-			selected = $(this);
-			e.stopPropagation();
-			var x = $(this).position().left / mag;
-			var y = $(this).position().top / mag;
-			var w = $(this).width();
-			var h = $(this).height();
-			var t = $('<div>')
-				.addClass('selectBox')
-				.css({top:y,left:x,width:w,height:h});
-			$('#base').append(t);
+		$('.box').on("click", function(e) {
+			if (e.shiftKey) {
+				if (selected) {
+					selected = selected.add($(this));
+				}
+				else {
+					selected = $(this);
+				}
+				e.stopPropagation();
+				var x = $(this).position().left / mag;
+				var y = $(this).position().top / mag;
+				var w = $(this).width();
+				var h = $(this).height();
+				var t = $('<div>')
+					.addClass('selectBox')
+					.attr('data-id', $(this).attr('id'))
+					.css({top:y,left:x,width:w,height:h});
+				$('#base').append(t);
 
-
-			var id = $(this).attr("id");
-			var m = $('#source').get(0);
-			var st = m.value.search(new RegExp('\\n\\['+id+'\\]')) + 1;
-			var ss = st + id.length + 2;
-			var ed = m.value.substr(ss).search(new RegExp('\\n\\[')) + 1;
-			if (ed <= 0) {
-				ed = m.textLength;
+				// 選択されているエレメントがひとつの時のみソースの該当部分を選択する。
+				if (selected.length === 1) {
+					var id = $(this).attr("id");
+					var m = $('#source').get(0);
+					var st = m.value.search(new RegExp('\\n\\['+id+'\\]')) + 1;
+					var ss = st + id.length + 2;
+					var ed = m.value.substr(ss).search(new RegExp('\\n\\[')) + 1;
+					if (ed <= 0) {
+						ed = m.textLength;
+					}
+					else {
+						ed += ss;
+					}
+					m.setSelectionRange(st,ed);
+				}
 			}
-			else {
-				ed += ss;
-			}
-
-			m.setSelectionRange(st,ed);
 		});
 	}
 	bindBoxClick();
 
-	$('#base,#edit').on("click", function() {
+	$('#base,#edit').on("click", function(e) {
 		selected = null;
 		$('.selectBox').remove();
 	});
@@ -174,25 +170,36 @@ $(function() {
 			e.stopPropagation();
 			e.preventDefault();
 
-			if (e.keyCode === 46) {
+			if (selected.length === 1 && e.keyCode === 46) {
 				$('#source').get(0).setRangeText('');
 				$('#source').trigger('keyup');
 				return;
 			}
 
-			var ox = 0;
-			var oy = 0;
-			if (e.keyCode === 38) oy = -0.5;
-			if (e.keyCode === 40) oy =  0.5;
-			if (e.keyCode === 37) ox = -0.5;
-			if (e.keyCode === 39) ox =  0.5;
+			selected.each(function() {
+				var ox = 0;
+				var oy = 0;
+				if (e.keyCode === 38) oy = -0.5;
+				if (e.keyCode === 40) oy =  0.5;
+				if (e.keyCode === 37) ox = -0.5;
+				if (e.keyCode === 39) ox =  0.5;
 
-			var em = parseInt($('html').css('font-size')) ;
-			var ex = parseInt(selected.css("left")) ;
-			var ey = parseInt(selected.css("top")) ;
-			var px = Math.floor((ex/em+0.25)*2)/2 + ox;
-			var py = Math.floor((ey/em+0.25)*2)/2 + oy;
-			moveObject(px, py);
+				var em = parseInt($('html').css('font-size')) ;
+				var ex = parseInt($(this).css("left")) ;
+				var ey = parseInt($(this).css("top")) ;
+				var px = Math.floor((ex/em+0.25)*2)/2 + ox;
+				var py = Math.floor((ey/em+0.25)*2)/2 + oy;
+
+				b.setpos($(this).attr('id'),px,py);
+				b.redraw(data);
+				var s = b.upd_text($('#source').val());
+				$('#source').val(s);
+				savelocal();
+				$('.selectBox[data-id="'+$(this).attr('id')+'"]').css({
+					left: $(this).position().left / mag,
+					top : $(this).position().top  / mag
+				});
+			});
 		}
 	});
 
