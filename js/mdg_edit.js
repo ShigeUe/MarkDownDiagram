@@ -254,6 +254,6 @@ $(function() {
 		var st = s.get(0).selectionStart;
 		var ed = s.get(0).selectionEnd;
 		$('#dialog').show();
-		$('#p_source').val(s.val().substring(st,ed-1)).focus();
+		$('#p_source').val(s.val().substring(st,ed).trim()+"\n").focus();
 	}
 });
