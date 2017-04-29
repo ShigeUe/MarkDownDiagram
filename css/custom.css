@@ -6,3 +6,25 @@ div.mdg .custom1 {
 	transform:rotate(5deg) ;
 	border:4px dotted red ;
 }
+
+div.mdg .blue-title th {
+  background-color: #00C;
+  color: white;
+}
+
+div.mdg .green-title th {
+  background-color: #0C0;
+  color: white;
+}
+
+div.box, table.box {
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.3);
+}
+
+div.mdg div.box.title {
+  border: 0 !important;
+  background-color: rgba(0,0,0,0) !important;
+  font-size: 1.5em;
+  font-weight: bold;
+  box-shadow: none;
+}

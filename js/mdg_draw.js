@@ -182,7 +182,13 @@ function connect(o1,o2,param) {
 			v = (param.type=="S")?{x:sp.x-ep.x ,y:sp.y-ep.y}:{x:ep.vx,y:ep.vy} ;
 			p1 = rot(v,th) ;
 			p2 = rot(v,-th) ;
-			ret.push(`<path d="M ${round(ep.x+p1.x*an)} ${round(ep.y+p1.y*an)} L ${ep.x} ${ep.y} L ${round(ep.x+p2.x*an)} ${round(ep.y+p2.y*an)}" ${cls} style="stroke-dasharray:0" />`)
+			if (cls == '') {
+				cls = 'class="arrow"';
+			}
+			else {
+				cls = cls.substr(0,cls.length-1) + ' arrow"';
+			}
+			ret.push(`<path d="M ${round(ep.x+p1.x*an)} ${round(ep.y+p1.y*an)} L ${ep.x} ${ep.y} L ${round(ep.x+p2.x*an)} ${round(ep.y+p2.y*an)}" ${cls} style="stroke-dasharray:0;"/>`)
 		}
 		if(param.arrow=="b"||param.arrow=="t") av(sp,ep) ;
 		if(param.arrow=="b"||param.arrow=="f") av(ep,sp) ;

@@ -143,7 +143,7 @@ $(function() {
 					var m = $('#source').get(0);
 					var st = m.value.search(new RegExp('\\n\\['+id+'\\]')) + 1;
 					var ss = st + id.length + 2;
-					var ed = m.value.substr(ss).search(new RegExp('\\n\\[')) + 1;
+					var ed = m.value.substr(ss).search(new RegExp('\\n(//|\\[)')) + 1;
 					if (ed <= 0) {
 						ed = m.textLength;
 					}
@@ -173,6 +173,11 @@ $(function() {
 			if (selected.length === 1 && e.keyCode === 46) {
 				$('#source').get(0).setRangeText('');
 				$('#source').trigger('keyup');
+				return;
+			}
+
+			if (selected.length === 1 && e.keyCode === 13) {
+				openEditDialog();
 				return;
 			}
 
@@ -226,5 +231,29 @@ $(function() {
 			savelocal();
 			self.start = null ;
 		});
+	}
+
+	$('#p_source_update').on('click', function() {
+		$('#source').get(0).setRangeText($('#p_source').val()+"\n");
+		$('#source').trigger('keyup');
+		$('#p_source').val('');
+		$('#dialog').hide();
+		$('.selectBox').remove();
+	});
+
+	$('#p_source_cancel').on('click', function() {
+		$('#p_source').val('');
+		$('#dialog').hide();
+		$('.selectBox').remove();
+	});
+
+	function openEditDialog() {
+		selected = null;
+
+		var s = $('#source');
+		var st = s.get(0).selectionStart;
+		var ed = s.get(0).selectionEnd;
+		$('#dialog').show();
+		$('#p_source').val(s.val().substring(st,ed-1)).focus();
 	}
 });

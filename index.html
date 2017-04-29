@@ -195,10 +195,10 @@ block6
 <div>filename:<input type=text id=i_fname value="sample.mdg" /></div>
 <button id=b_load>LOAD</button>
 <input type=file id=f_load style="display:none" />
-<a href="" id=l_save target="_blank"><button id=b_save>SAVE</button></a>
+<a href="#" id=l_save target="_blank"><button id=b_save>SAVE</button></a>
 </div>
 </section>
-<div class=resbar_h id="rb"></div>
+<div class=resbar_h id=rb></div>
 <section id=view>
 <section id=control>
 zoom:<input type=range id=zoom min=25 max=200 value=100><input type=text id=zoomText size=4 readonly value="1">
@@ -211,6 +211,15 @@ width:<input type=text id=size_x size=6 value=2900> height:<input type=text id=s
 </div>
 </div>
 </section>
+</div>
+<div id=dialog>
+<div>
+<textarea id=p_source></textarea>
+<div>
+<button type=button id=p_source_update>更新</button>
+<button type=button id=p_source_cancel>キャンセル</button>
+</div>
+</div>
 </div>
 </body>
 </html>
