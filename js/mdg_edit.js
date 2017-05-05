@@ -19,14 +19,17 @@ $(function() {
 
 
 	var b = new mdg_draw($('#base')) ;
+	var p;
+	
 	var p = loadlocal() ;
 	if(p) {
-		$('#source').val( p.source ) ;
-		$('#i_fname').val(p.fname ) ;
+		//$('#source').val( p.source ) ;
+		//$('#i_fname').val(p.fname ) ;
 		$('#edit').css('width', p.width);
 		$('#zoom').val(p.zoom * 100);
 		$('#zoom').trigger('input');
 	}
+	
 	var data = b.parse($('#source').val())  ;
 	b.setobj(data,true) ;
 	
@@ -111,9 +114,17 @@ $(function() {
 		reader.readAsText(f[0]);
 	});
 
-	$('#l_save').on("click",function(){
+	$('#b_save').on("click",function(){
+		/*
 		$(this).attr("download",$('#i_fname').val());
 		$(this).attr("href","data:application/octet-stream;charset=UTF-8,"+encodeURIComponent($('#source').val())) ;
+		*/
+		var data = {
+			id: $('#remote_id').val(),
+			name: $('#i_fname').val(),
+			data: $('#source').val()
+		};
+		$.post('save.php',data);
 		return true ;
 	});
 

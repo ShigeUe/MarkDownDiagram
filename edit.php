@@ -1,4 +1,21 @@
-<!DOCTYPE html>
+<?php
+
+require_once 'lib/lib.php';
+DB::init();
+$id = @$_GET['id'];
+if (empty($id) || !is_numeric($id)) {
+	if ($id === 'new') {
+		$data = null;
+	}
+	else {
+		exit;
+	}
+}
+else {
+	$data = DB::get($id);
+}
+
+?><!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -74,6 +91,7 @@ html,body{
 	bottom:5px ;
 	font-size:1rem ;
 	font-family:"Myrica M",monospace,sans-serif ;
+	resize: none;
 }
 #exp_src {
 	display:none ;
@@ -146,6 +164,9 @@ div.mdiv {
 
 <div id=sbase>
 <textarea id=source>
+<?php
+if (!$data):
+?>
 //[name]はブロックの定義
 //--- はテーブル行の区切り
 //==> はブロック間のリンク
@@ -188,14 +209,24 @@ l<=(l_w4)=>r[b3]
 [b7] (custom1) <6,16>
 block6
 
-
+<?php
+else:
+	echo $data['data'];
+endif; ?>
 </textarea>
 </div>
 <div class="mdiv">
-<div>filename:<input type=text id=i_fname value="sample.mdg" /></div>
+<div>name:<input type=text id=i_fname value="<?php
+if($data) {
+	echo h($data['name']);
+}
+?>" /><input type="hidden" id=remote_id value="<?= h($id) ?>" />
+<!--
 <button id=b_load>LOAD</button>
 <input type=file id=f_load style="display:none" />
-<a href="#" id=l_save target="_blank"><button id=b_save>SAVE</button></a>
+-->
+<button id=b_save>SAVE</button>
+<a href="./" style="color:white;display:inline-block;">Go to List</a>
 </div>
 </section>
 <div class=resbar_h id=rb></div>
