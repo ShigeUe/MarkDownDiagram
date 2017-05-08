@@ -155,13 +155,18 @@ function connect(o1,o2,param) {
 		ret.push(`<path d="M ${sp.x} ${sp.y} L ${ep.x} ${sp.y}" ${cls} />`) ;
 	// Angular line
 	} else if(param.type && param.type[0]=="C") {
-		// Like "L". First line is horizontal.
-		if (param.type[1] == 'H') {
+		var pm = (param.type.length > 1) ? param.type.substr(1) : 50;
+		if (sp.vy == 0 && ep.vy == 0) {
+			ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x+sp.vx*pm} ${sp.y} L ${sp.x+sp.vx*pm} ${ep.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+		}
+		if (sp.vy != 0 && ep.vy == 0) {
+			ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x} ${ep.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+		}
+		if (sp.vy == 0 && ep.vy != 0) {
 			ret.push(`<path d="M ${sp.x} ${sp.y} L ${ep.x} ${sp.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
 		}
-		else {
-			var pm = (param.type.length > 1) ? param.type.substr(1) : 50;
-			ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x+sp.vx*pm} ${sp.y} L ${sp.x+sp.vx*pm} ${ep.y} L ${ep.x} ${ep.y}" ${cls} />`) ;
+		if (sp.vy !== 0 && ep.vy != 0) {
+			ret.push(`<path d="M ${sp.x} ${sp.y} L ${sp.x} ${sp.y+sp.vy*pm} L ${ep.x} ${sp.y+sp.vy*pm} L ${ep.x} ${ep.y}" ${cls} />`) ;
 		}
 	// Bezier curve line
 	} else {

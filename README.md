@@ -68,9 +68,8 @@ classはリンクのSVG pathに適用されるクラス名。
 |S         |直線（fig-02）|
 |SH        |水平直線（接続先ブロックのY位置とは無関係に水平）（fig-03）|
 |SV        |垂直直線（接続先ブロックのX位置とは無関係に垂直）（fig-04）|
-|C         |2頂点の角線（fig-05）|
+|C         |1頂点または2頂点の角線（fig-05,fig-08）|
 |Cn        |2頂点の角線。nは最初の角までのピクセル数（fig-06, fig-07）|
-|CH        |1頂点の角線。最初の線が水平（fig-07）|
 
 **[fig-01]**  
 ![fig-01](https://raw.githubusercontent.com/ShigeUe/MarkDownDiagram/images/fig-01.gif)
